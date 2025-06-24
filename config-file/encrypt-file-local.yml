@@ -1,0 +1,9 @@
+encrypt-file:
+  p12-storepass: MySecurePassword123!
+
+# 개발환경 추가 설정
+logging:
+  level:
+    demo.encryptfile: DEBUG
+    org.springframework.cloud.config: DEBUG
+    com.github.ulisesbocchio.jasyptspringboot: DEBUG

@@ -1,9 +1,19 @@
 spring:
   # 운영 환경 설정
+  config:
+    import:
+      - optional:configserver:http://localhost:9999
+  cloud:
+    config:
+      uri: http://localhost:9999
+      name: encrypt-file
+      profile: prod
+      fail-fast: true  # 운영환경에서는 Config Server 필수
   jasypt:
     encryptor:
       key-store:
-        location: ${KEYSTORE_LOCATION:file:secrets/keystore.p12}
+        location: ${KEYSTORE_LOCATION:file:secrets/keystore-prod.p12}
+        password: ${encrypt-file.p12-storepass}  # Config Server에서 가져올 값
   
   # MySQL 데이터베이스 설정 (암호화된 값 사용)
   datasource:

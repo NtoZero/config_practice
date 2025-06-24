@@ -26,7 +26,7 @@ public class JasyptConfig {
     @Value("${spring.jasypt.encryptor.key-store.location}")
     private String keystoreLocation;
 
-    @Value("${spring.jasypt.encryptor.key-store.password}")
+    @Value("${encrypt-file.p12-storepass:${JASYPT_STOREPASS:}}")  // Config Server에서 우선, 환경변수 fallback
     private String keystorePassword;
 
     @Value("${spring.jasypt.encryptor.key-store.alias}")

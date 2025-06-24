@@ -1,2 +1,2 @@
 encrypt-file:
-  p12-storepass:MySecurePassword123!
+  p12-storepass: MySecurePassword123!

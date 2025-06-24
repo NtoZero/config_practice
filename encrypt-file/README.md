@@ -1,32 +1,68 @@
-# Spring Boot + Jasypt (.p12) 암호화 데모
+# Spring Boot + Jasypt (.p12) + Config Server 암호화 데모
 
-이 프로젝트는 PKCS#12 KeyStore를 사용한 Jasypt 암호화/복호화 구현 예제입니다.
+이 프로젝트는 PKCS#12 KeyStore를 사용한 Jasypt 암호화/복호화와 Spring Cloud Config Server 연동 구현 예제입니다.
 
-## 🚀 빠른 시작 (방안 2: @EnableEncryptableProperties)
+## 🚀 빠른 시작 (Config Server 연동)
 
-### 1. 환경 변수 설정
+### 1. Config Server 실행
+
+```bash
+# encrypt-configure 모듈에서 Config Server 실행
+cd ../encrypt-configure
+./gradlew bootRun
+```
+
+Config Server는 `http://localhost:9999`에서 실행됩니다.
+
+### 2. 환경 변수 설정 (Fallback용)
 
 **Windows:**
 ```bash
-set JASYPT_PASSWORD=mySecretPassword123!
+set JASYPT_STOREPASS=MySecurePassword123!
 ```
 
 **Linux/macOS:**
 ```bash
-export JASYPT_PASSWORD=mySecretPassword123!
+export JASYPT_STOREPASS=MySecurePassword123!
 ```
 
-### 2. 테스트 실행
+### 3. 애플리케이션 실행
 
 ```bash
-# 기본 테스트 실행
-./gradlew test
-
-# 데모 테스트 실행 (환경 변수 필요)
-./gradlew test --tests JasyptDemoTest
-
-# 애플리케이션 실행
+# Config Server에서 설정을 가져와서 실행
 ./gradlew bootRun
+
+# 또는 특정 프로파일로 실행
+./gradlew bootRun --args='--spring.profiles.active=prod'
+```
+
+## 🌐 Config Server 연동 방식
+
+### 설정 우선순위
+1. **Config Server**: `config-file/encrypt-file-{profile}.yml`에서 `encrypt-file.p12-storepass` 로드
+2. **환경변수 Fallback**: Config Server 연결 실패 시 `JASYPT_STOREPASS` 환경변수 사용
+
+### Config Server 설정 확인
+```bash
+# Config Server에서 설정 확인
+curl http://localhost:9999/encrypt-file/prod
+curl http://localhost:9999/encrypt-file/local
+```
+
+### 응답 예시:
+```json
+{
+  "name": "encrypt-file",
+  "profiles": ["prod"],
+  "propertySources": [
+    {
+      "name": "config-file/encrypt-file-prod.yml",
+      "source": {
+        "encrypt-file.p12-storepass": "MySecurePassword123!"
+      }
+    }
+  ]
+}
 ```
 
 ## 📁 프로젝트 구조

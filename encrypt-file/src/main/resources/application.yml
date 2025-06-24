@@ -4,12 +4,22 @@ spring:
   config:
     import:
       - optional:file:.env[.properties]
+      - optional:configserver:http://localhost:9999
+  cloud:
+    config:
+      uri: http://localhost:9999
+      name: encrypt-file
+      profile: prod
+      fail-fast: false
+      retry:
+        max-attempts: 3
+        initial-interval: 1000
   
   # Profile 설정
   profiles:
     active: local
   
-  # JASYPT 설정 (공통)
+  # JASYPT 설정 (공통) - Config Server에서 가져온 값 사용
   jasypt:
     encryptor:
       algorithm: PBEWITHHMACSHA512ANDAES_256
@@ -17,7 +27,7 @@ spring:
       pool-size: 2
       key-store:
         location: ${KEYSTORE_LOCATION:file:secrets/keystore.p12}
-        password: ${JASYPT_STOREPASS}
+        password: ${encrypt-file.p12-storepass:${JASYPT_STOREPASS}}  # Config Server에서 우선, 환경변수 fallback
         alias: jasypt-key
   
   # JPA 설정 (공통)

@@ -60,15 +60,20 @@ public class EncryptFileApplication {
         
         // 환경변수 확인 로그 (민감한 정보는 마스킹)
         String keystoreLocation = env.getProperty("spring.jasypt.encryptor.key-store.location", "N/A");
-        String hasStorepass = env.getProperty("JASYPT_STOREPASS") != null ? "설정됨" : "설정되지 않음";
+        String hasStorepass = env.getProperty("encrypt-file.p12-storepass") != null ? "Config Server에서 설정됨" : 
+                            env.getProperty("JASYPT_STOREPASS") != null ? "환경변수에서 설정됨" : "설정되지 않음";
+        String configServerUri = env.getProperty("spring.cloud.config.uri", "미설정");
         
         log.info("🔑 키스토어 설정:");
         log.info("   - 위치: {}", keystoreLocation);
         log.info("   - 비밀번호: {}", hasStorepass);
+        log.info("🌐 Config Server:");
+        log.info("   - URI: {}", configServerUri);
         
-        if (!"설정됨".equals(hasStorepass)) {
-            log.warn("⚠️  JASYPT_STOREPASS 환경변수가 설정되지 않았습니다!");
-            log.warn("⚠️  키스토어 생성 후 다음 명령으로 환경변수를 설정하세요:");
+        if ("설정되지 않음".equals(hasStorepass)) {
+            log.warn("⚠️  키스토어 비밀번호가 설정되지 않았습니다!");
+            log.warn("⚠️  Config Server에서 encrypt-file.p12-storepass 설정을 확인하거나");
+            log.warn("⚠️  JASYPT_STOREPASS 환경변수를 설정해주세요:");
             log.warn("⚠️  Linux/macOS: export JASYPT_STOREPASS=$(cat secrets/.keystore_pass)");
             log.warn("⚠️  Windows: $env:JASYPT_STOREPASS = Get-Content secrets\\keystore_pass.txt");
         }
