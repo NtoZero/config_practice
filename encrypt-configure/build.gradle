@@ -1,34 +1,42 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.3'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.springframework.boot' version '3.3.1' // Spring Boot
+    id 'io.spring.dependency-management' version '1.1.5' // 의존성 관리를 위한 필수 플러그인
 }
 
-group = 'demo'
+group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+    sourceCompatibility = '17'
 }
 
 repositories {
     mavenCentral()
 }
 
+// Spring Cloud 버전을 변수로 지정
+ext {
+    set('springCloudVersion', "2023.0.1")
+}
+
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    // Spring Cloud Config Server를 위한 핵심 의존성
+    implementation 'org.springframework.cloud:spring-cloud-config-server'
+
+    // /actuator/health 등 모니터링 및 관리 엔드포인트를 위한 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // 테스트를 위한 의존성
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// Spring Cloud 의존성 버전을 관리하기 위한 BOM(Bill of Materials) 설정
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 tasks.named('test') {
