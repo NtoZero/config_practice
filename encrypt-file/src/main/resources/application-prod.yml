@@ -3,7 +3,7 @@ spring:
   jasypt:
     encryptor:
       key-store:
-        location: ${KEYSTORE_LOCATION:file:/etc/secrets/keystore.p12}
+        location: ${KEYSTORE_LOCATION:file:secrets/keystore.p12}
   
   # MySQL 데이터베이스 설정 (암호화된 값 사용)
   datasource:

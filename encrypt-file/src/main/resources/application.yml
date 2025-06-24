@@ -34,9 +34,9 @@ spring:
 # 암호화된 설정 값들 (예제)
 demo:
   database:
-    url: ENC(encrypted-db-url-here)
-    username: ENC(encrypted-username-here)
-    password: ENC(encrypted-password-here)
+    url: ENC(NLx3PM+RlkvuoQhJIKXLlVENuAUu0tVZPzSjPjCV9aZI3MNg1dQ9wbl5FjUq/cigii4G7YU1C0K01LyvLLrRU/Bu5T25kikW1nAi8XWVDFw=)
+    username: ENC(VGNbfZ9Tf3fp1pUn/AylPv/plOH1D52Qon/HNZNWI2pfX1tEg8O5XUNW+x7GfCti)
+    password: ENC(EhtoE6BWksBtv83MLkPiueb72O65Rs1WK83lJ4UPYMmxCX6pylVT3otXJcU3f1xE)
   api:
     key: ENC(encrypted-api-key-here)
     secret: ENC(encrypted-secret-here)
