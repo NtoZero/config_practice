@@ -1,0 +1,23 @@
+# orders-service 운영 환경 설정
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://prod-db:3306/orders
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: orders_user
+    password: secure_password
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+app:
+  config:
+    message: "Orders Service - Production Environment"
+    debug: false
+    version: "1.0.0"
+    features:
+      new-order-flow: true
+      payment-integration: true

@@ -1,17 +1,14 @@
 server:
-  port: 0  # 랜덤 포트 사용 (테스트용)
+  port: 8888
 
 spring:
   application:
-    name: config-server-test
+    name: config-server
   cloud:
     config:
       server:
         native:
           search-locations: classpath:/config-repo/
-        # Git 설정 비활성화하고 native 프로필 사용
-        default-profile: native
-      enabled: true
 
 management:
   endpoints:
@@ -24,5 +21,4 @@ management:
 
 logging:
   level:
-    org.springframework.cloud.config: DEBUG
-    root: INFO
+    org.springframework.cloud.config: INFO

@@ -1,0 +1,19 @@
+# user-service 애플리케이션 전용 설정
+spring:
+  application:
+    name: user-service
+
+server:
+  port: 8081
+
+# 서비스별 커스텀 설정
+user-service:
+  jwt:
+    secret: default-secret-key
+    expiration: 86400000  # 24시간
+
+  email:
+    enabled: false
+    smtp:
+      host: localhost
+      port: 587

@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  config-server:
+    build: .
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - config-network
+
+  orders-service:
+    build: ./examples/client-example
+    ports:
+      - "8080:8080"
+    depends_on:
+      - config-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    networks:
+      - config-network
+
+networks:
+  config-network:
+    driver: bridge

@@ -1,0 +1,12 @@
+# user-service 기본 설정
+server:
+  port: 8081
+
+app:
+  config:
+    message: "User Service - Default Configuration"
+    debug: false
+    version: "1.0.0"
+    cache:
+      enabled: true
+      ttl: 300

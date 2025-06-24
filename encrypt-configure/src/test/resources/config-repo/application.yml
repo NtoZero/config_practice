@@ -1,3 +1,12 @@
-# 테스트용 더미 설정 파일
-test:
-  message: "This is a test configuration"
+# 모든 애플리케이션 공통 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  level:
+    root: INFO

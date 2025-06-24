@@ -1,0 +1,9 @@
+# orders-service 기본 설정
+server:
+  port: 8080
+
+app:
+  config:
+    message: "Orders Service - Default Configuration"
+    debug: false
+    version: "1.0.0"

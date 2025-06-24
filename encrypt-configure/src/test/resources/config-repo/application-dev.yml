@@ -1,0 +1,10 @@
+# 개발 환경 공통 설정
+logging:
+  level:
+    org.springframework: DEBUG
+    org.hibernate.SQL: DEBUG
+
+management:
+  endpoint:
+    health:
+      show-details: always

@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: orders-service
+  profiles:
+    active: dev
+  config:
+    import: "configserver:http://localhost:8888"
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: true
+      retry:
+        initial-interval: 1000
+        max-attempts: 6
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,refresh,env

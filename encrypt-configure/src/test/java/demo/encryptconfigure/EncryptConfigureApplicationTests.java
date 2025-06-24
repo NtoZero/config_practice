@@ -2,10 +2,13 @@ package demo.encryptconfigure;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@TestPropertySource(properties = {
+    "spring.profiles.active=native", 
+    "spring.cloud.config.server.native.search-locations=classpath:/config-repo/"
+})
 class EncryptConfigureApplicationTests {
 
     @Test

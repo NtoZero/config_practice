@@ -1,0 +1,10 @@
+# 운영 환경 공통 설정
+logging:
+  level:
+    org.springframework: WARN
+    root: WARN
+
+management:
+  endpoint:
+    health:
+      show-details: when-authorized

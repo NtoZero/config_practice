@@ -1,44 +1,32 @@
 server:
-  port: 8888
-  ssl:
-    enabled: true
-    key-store: classpath:config-server-keystore.p12
-    key-store-password: ${KS_PWD}
-    key-store-type: PKCS12
+  port: 9999
 
 spring:
-  application.name: config-server
-  security:
-    basic:
-      enabled: true
-      username: ${CONFIG_USER}
-      password: ${CONFIG_PASS}
-    oauth2:
-      resource:
-        jwt:
-          key-uri: https://auth.intra.local/.well-known/jwks.json
+  application:
+    name: config-server
   cloud:
     config:
       server:
         git:
-          uri: https://git.intra.local/infrastructure/config-repo.git
-          default-label: main
-          username: config-reader
-          password: ${GIT_PAT}
-          skipSslVerification: false
+          uri: https://github.com/NtoZero/config_practice
+          default-label: config_practice
           clone-on-start: true
-          refresh-rate: 60
-        encrypt:
-          enabled: true
-          key-store:
-            location: classpath:config-server-keystore.p12
-            password: ${KS_PWD}
-            type: PKCS12
-            alias: encrypt-key
+          timeout: 10
+          search-paths: config-file
+        health:
+          repositories:
+            config-repo:
+              label: main
+
 management:
   endpoints:
     web:
-      exposure: health,info,env,encrypt,decrypt
-  security:
-    roles:
-      - ROLE_CONFIG_ADMIN
+      exposure:
+        include: health,info,env,configprops
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springframework.cloud.config: INFO

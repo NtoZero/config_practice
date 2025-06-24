@@ -1,0 +1,26 @@
+# orders-service 개발 환경 설정
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+
+app:
+  config:
+    message: "Orders Service - Development Environment"
+    debug: true
+    version: "1.0.0-SNAPSHOT"
+    features:
+      new-order-flow: true
+      payment-integration: false

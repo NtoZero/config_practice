@@ -1,0 +1,19 @@
+# user-service dev 프로파일
+spring:
+  datasource:
+    url: jdbc:h2:mem:userdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+
+user-service:
+  jwt:
+    secret: dev-secret-key
+    expiration: 3600000  # 1시간 (개발용 짧은 만료시간)
+
+  email:
+    enabled: false  # 개발 환경에서는 이메일 비활성화
