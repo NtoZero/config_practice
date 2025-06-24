@@ -1,3 +1,4 @@
 rootProject.name = 'encrypt-project'
 include 'encrypt-core'
 include 'encrypt-configure'
+include 'encrypt-file' 
