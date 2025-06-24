@@ -35,7 +35,30 @@ tasks.named('test') {
 ---
 
 ## 2. PKCS#12 키스토어 생성
+### 2-1. 환경변수 설정
+- linux
+```bash
+- export JASYPT_STOREPASS="mySecureStorePassword123"
+  export JASYPT_KEYPASS="mySecureKeyPassword456"
+```
+```bash
+echo $JASYPT_STOREPASS
+echo $JASYPT_KEYPASS
+```
 
+- window
+```powershell
+$env:JASYPT_STOREPASS="mySecureStorePassword123"
+$env:JASYPT_KEYPASS="mySecureKeyPassword456"
+```
+```powershell
+# 변수 값만 출력
+$env:JASYPT_STOREPASS
+$env:JASYPT_KEYPASS
+```
+
+### 2-2. 생성
+- linux 
 ```bash
 keytool -genseckey \
   -alias jasypt-secret-key \
@@ -46,7 +69,7 @@ keytool -genseckey \
   -storepass $JASYPT_STOREPASS \
   -keypass $JASYPT_KEYPASS
 ```
-
+- window
 ```powershell
 keytool -genseckey `
   -alias jasypt-secret-key `
@@ -60,6 +83,21 @@ keytool -genseckey `
 
 - `storepass` : 키스토어 보호 비밀번호 (`$JASYPT_STOREPASS`)  
 - `keypass`   : 키 접근 비밀번호 (`$JASYPT_KEYPASS`)  
+
+- window (비밀번호 직접 입력)
+```powershell
+PS C:\Mine\encrypt\encrypt-file> keytool -genseckey `
+>>   -alias jasypt-secret-key `
+>>   -keyalg AES `
+>>   -keysize 256 `
+>>   -storetype PKCS12 `
+>>   -keystore src/main/resources/keystore.p12 `
+>> 
+키 저장소 비밀번호 입력:  
+새 비밀번호 다시 입력: 
+256비트 AES 보안 키를 생성합니다.
+
+```
 
 ---
 

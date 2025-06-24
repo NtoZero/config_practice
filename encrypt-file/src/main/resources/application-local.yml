@@ -1,0 +1,45 @@
+spring:
+  # 로컬 개발 환경 설정
+  jasypt:
+    encryptor:
+      key-store:
+        location: file:secrets/keystore.p12
+  
+  # 로컬 H2 데이터베이스 설정
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  # H2 콘솔 활성화
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  # JPA 설정 (로컬)
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+# 로컬 개발용 암호화되지 않은 값들
+demo:
+  database:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: ""
+  api:
+    key: local-api-key-123
+    secret: local-secret-456
+
+# 로컬 개발 로깅
+logging:
+  level:
+    demo.encryptfile: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

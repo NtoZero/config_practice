@@ -35,3 +35,18 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Jasypt KeyStore & Secrets ###
+src/main/resources/keystore.p12
+src/main/resources/*.p12
+src/main/resources/*.jks
+*.p12.backup.*
+secrets/*.p12
+secrets/.keystore_pass
+secrets/keystore_pass.txt
+secrets/backup/
+
+### Environment Variables ###
+.env.properties
+.env.local
+.env.prod

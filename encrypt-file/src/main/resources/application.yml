@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: encrypt-file
+  config:
+    import:
+      - optional:file:.env[.properties]
+  
+  # Profile 설정
+  profiles:
+    active: local
+  
+  # JASYPT 설정 (공통)
+  jasypt:
+    encryptor:
+      algorithm: PBEWITHHMACSHA512ANDAES_256
+      key-obtention-iterations: 100000
+      pool-size: 2
+      key-store:
+        location: ${KEYSTORE_LOCATION:file:secrets/keystore.p12}
+        password: ${JASYPT_STOREPASS}
+        alias: jasypt-key
+  
+  # JPA 설정 (공통)
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        use_sql_comments: true
+
+# 암호화된 설정 값들 (예제)
+demo:
+  database:
+    url: ENC(encrypted-db-url-here)
+    username: ENC(encrypted-username-here)
+    password: ENC(encrypted-password-here)
+  api:
+    key: ENC(encrypted-api-key-here)
+    secret: ENC(encrypted-secret-here)
+
+# Actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# 로깅 설정
+logging:
+  level:
+    root: INFO
+    com.github.ulisesbocchio.jasyptspringboot: DEBUG
+    org.jasypt: DEBUG
+    demo.encryptfile: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
