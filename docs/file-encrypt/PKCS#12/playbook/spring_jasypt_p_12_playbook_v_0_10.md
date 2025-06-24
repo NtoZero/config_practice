@@ -323,4 +323,3 @@ LoadCredential=jasypt-store:/run/keys/keystore.p12
 
 ## 결론 (추가)
 Secret Manager가 없는 온프레미스에서도 **Jasypt 키 보호**·**키 회전**·**감사 추적**을 달성할 수 있음.  
-대장님 조직의 인력·프로세스·컴플라이언스 수준에 맞춰 14장 옵션을 택일하거나 혼합하시길 권함.

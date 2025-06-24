@@ -87,8 +87,6 @@ try (InputStream fis = new FileInputStream("keystore.p12")) {
 - IETF RFC 7292 - PKCS #12: Personal Information Exchange Syntax v1.1  
   https://tools.ietf.org/html/rfc7292  
 - RFC Editor 개요 페이지  
-  https://www.rfc-editor.org/rfc/rfc7292  
-- SSL.com: Export Certificates and Private Key from a PKCS#12 File with OpenSSL  
-  https://www.ssl.com/article/export-certificates-and-private-key-from-a-pkcs12-file-with-openssl/  
+  https://www.rfc-editor.org/rfc/rfc7292
 - Stack Overflow: OpenSSL로 PKCS#12 파일 생성하기  
   https://stackoverflow.com/questions/2131259/how-to-create-a-pkcs-12-file-using-openssl
