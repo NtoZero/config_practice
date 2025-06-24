@@ -1,10 +1,10 @@
-package demo.encrypt;
+package demo.encryptconfigure;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EncryptApplicationTests {
+class EncryptConfigureApplicationTests {
 
     @Test
     void contextLoads() {

@@ -1,1 +1,3 @@
-rootProject.name = 'encrypt'
+rootProject.name = 'encrypt-project'
+include 'encrypt-core'
+include 'encrypt-configure'
