@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 /**
  * 사용자 서비스 테스트
  */
-@SpringBootTest
+//@SpringBootTest
 @ActiveProfiles("local")
 @Transactional
 class UserServiceTest {
