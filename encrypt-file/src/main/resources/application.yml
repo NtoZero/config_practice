@@ -17,7 +17,7 @@ spring:
       pool-size: 2
       key-store:
         location: ${KEYSTORE_LOCATION:file:secrets/keystore.p12}
-        password: ${JASYPT_STOREPASS}
+        password: ${KEYSTORE_PASSWORD}
         alias: jasypt-secret-key
   
   # JPA 설정 (공통)
@@ -34,9 +34,9 @@ spring:
 # 암호화된 설정 값들 (예제)
 demo:
   database:
-    url: ENC(oPgMpzmsx6ZoCsdJvf5uUuqyAoFatextiDYRZjmHFF9FGTdzuHY7hXQGeS6hIJRClEfJfqd45RhBEYXZK2TteRLcD7gWJo8pAE6OIpCKTZY=)
-    username: ENC(/f+4vIgAaxDpjqpLY2/yhhCZHIZ6xHZeCd+2yb138a4EcZC8MN6OW1SWPM6S2ic9)
-    password: ENC(Erg8AnnoW14aNvMAnS6PevTNmGON+PT6Fpf7//013MqRGcPnYB3Zmdyn9ywEboy9)
+    url: ENC(DHMROhTp1w/dUH1GxuiyfAKH+jTbTwzBYOoVZi9E6ouinsGL3RK2KRHP6xRl+QyDBKd2XqhjvqVBJaWdUZ/eck7LWmg+lAePyaSi+Nm0f1M=)
+    username: ENC(HZ+9mUVFXqXqrqUBe3QjpFx7Loy40375JC/DFBkJgrAt2HXrlNrOQHmvtA2vNvGJ)
+    password: ENC(x2xG8hUDlIXcrKt+5BZ9Eb7j8+OqUIqZrnfvFOwBaHoEv7fx+FKRA+2+GlcrJT8R)
   api:
     key: ENC(encrypted-api-key-here)
     secret: ENC(encrypted-secret-here)
@@ -54,7 +54,7 @@ management:
 # 로깅 설정
 logging:
   level:
-    root: INFO
+    root: DEBUG
     com.github.ulisesbocchio.jasyptspringboot: DEBUG
     org.jasypt: DEBUG
     demo.encryptfile: DEBUG

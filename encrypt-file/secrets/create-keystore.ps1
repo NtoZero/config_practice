@@ -41,15 +41,22 @@ Write-Host "🔧 키스토어를 생성 중입니다..." -ForegroundColor Yellow
   -validity 3650 `
   -dname "CN=jasypt, OU=Dev, O=YourOrg, L=Seoul, C=KR"
 
-Remove-Variable STOREPASS  # 메모리 해제
+Remove-Variable KEYSTORE_PASSWORD  # 메모리 해제
 Write-Host "" 
 Write-Host "✅ [완료] keystore.p12 생성 완료 — 비밀번호는 $passFile 파일에 저장되었습니다." -ForegroundColor Green
 
 Write-Host ""
-Write-Host "🔧 다음 단계:" -ForegroundColor Cyan
-Write-Host "1. `$env:JASYPT_STOREPASS = Get-Content keystore_pass.txt 명령으로 환경변수 설정"
+Write-Host "🔧 다음 단계 (v2.0 마이그레이션):" -ForegroundColor Cyan
+Write-Host "1. `$env:KEYSTORE_PASSWORD = Get-Content keystore_pass.txt 명령으로 환경변수 설정"
 Write-Host "2. 애플리케이션 시작: cd .. && .\gradlew.bat bootRun --args='--spring.profiles.active=local'"
+Write-Host ""
+Write-Host "🔐 v2.0 마이그레이션 특징:" -ForegroundColor Green
+Write-Host "✅ 키스토어 비밀번호: P12 파일 열기용만 사용"
+Write-Host "✅ JASYPT 암호화: 키스토어 내부 개인키 자동 추출 사용"
+Write-Host "✅ 키 분리 완료: KEYSTORE_PASSWORD ≠ JASYPT 암호화 키"
+Write-Host "✅ 보안 강화: 키스토어 비밀번호 노출되어도 암호화 키는 안전"
 Write-Host ""
 Write-Host "🛡️  보안 주의사항:" -ForegroundColor Yellow
 Write-Host "- keystore_pass.txt 파일과 keystore.p12 파일은 절대 버전 관리에 포함하지 마세요"
 Write-Host "- 운영 환경에서는 적절한 권한 설정을 하세요"
+Write-Host "- 기존 JASYPT_STOREPASS 환경변수는 더 이상 사용하지 않습니다"

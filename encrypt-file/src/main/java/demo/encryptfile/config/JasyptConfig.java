@@ -1,27 +1,30 @@
 package demo.encryptfile.config;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+import demo.encryptfile.service.KeyStoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import jakarta.annotation.PostConstruct;
-import java.io.FileInputStream;
-import java.security.KeyStore;
 
 /**
  * JASYPT PKCS#12 키스토어 설정
- * 플레이북 v0.6 기준으로 구현
+ * 개인키 기반 암호화 구조로 마이그레이션 완료 (v2.0)
  */
 @Slf4j
 @Configuration
 @EnableEncryptableProperties
 public class JasyptConfig {
+
+    @Autowired
+    private KeyStoreService keyStoreService;
 
     @Value("${spring.jasypt.encryptor.key-store.location}")
     private String keystoreLocation;
@@ -43,7 +46,7 @@ public class JasyptConfig {
 
     @PostConstruct
     public void validateConfiguration() {
-        log.info("🔐 JASYPT 설정 초기화 중...");
+        log.info("🔐 JASYPT 설정 초기화 중... (개인키 기반 v2.0)");
         log.info("키스토어 위치: {}", keystoreLocation);
         log.info("키스토어 별칭: {}", keystoreAlias);
         log.info("암호화 알고리즘: {}", algorithm);
@@ -51,21 +54,14 @@ public class JasyptConfig {
         log.info("풀 크기: {}", poolSize);
         
         if (keystorePassword == null || keystorePassword.trim().isEmpty()) {
-            throw new IllegalStateException("JASYPT_STOREPASS 환경변수가 설정되지 않았습니다. " +
+            throw new IllegalStateException("KEYSTORE_PASSWORD 환경변수가 설정되지 않았습니다. " +
                     "키스토어 비밀번호를 환경변수로 설정해주세요.");
         }
         
-        // 키스토어 파일 존재 확인
+        // 키스토어 검증 (KeyStoreService 사용)
         try {
-            String path = keystoreLocation.replace("file:", "");
-            KeyStore keyStore = KeyStore.getInstance("PKCS12");
-            try (FileInputStream fis = new FileInputStream(path)) {
-                keyStore.load(fis, keystorePassword.toCharArray());
-                if (!keyStore.containsAlias(keystoreAlias)) {
-                    throw new IllegalStateException("키스토어에서 별칭 '" + keystoreAlias + "'를 찾을 수 없습니다.");
-                }
-                log.info("✅ 키스토어 검증 완료");
-            }
+            keyStoreService.validateKeyStore(keystoreLocation, keystorePassword, keystoreAlias);
+            log.info("✅ 키스토어 검증 완료 (KeyStoreService 사용)");
         } catch (Exception e) {
             log.error("❌ 키스토어 검증 실패: {}", e.getMessage());
             throw new IllegalStateException("키스토어 설정이 올바르지 않습니다: " + e.getMessage(), e);
@@ -75,13 +71,19 @@ public class JasyptConfig {
     @Bean(name = "jasyptStringEncryptor")
     @Primary
     public StringEncryptor stringEncryptor() {
-        log.info("🔧 JASYPT StringEncryptor 빈 생성 중...");
+        log.info("🔧 JASYPT StringEncryptor 빈 생성 중... (개인키 기반)");
+        
+        // 🔑 핵심 변경: 키스토어에서 개인키를 추출하여 JASYPT 비밀번호로 사용
+        String privateKeyPassword = keyStoreService.extractPrivateKeyAsPassword(
+            keystoreLocation, keystorePassword, keystoreAlias);
+        
+        log.info("🔐 개인키 기반 암호화 키 추출 완료 (키스토어 비밀번호와 분리됨)");
         
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
         
-        // PKCS#12 키스토어 설정
-        config.setPassword(keystorePassword);
+        // 개인키 기반 암호화 설정
+        config.setPassword(privateKeyPassword);  // 🔑 키스토어 비밀번호가 아닌 개인키 사용
         config.setAlgorithm(algorithm);
         config.setKeyObtentionIterations(iterations);
         config.setPoolSize(poolSize);
@@ -101,7 +103,8 @@ public class JasyptConfig {
                 throw new IllegalStateException("암호화/복호화 테스트 실패");
             }
             
-            log.info("✅ JASYPT StringEncryptor 초기화 완료 및 테스트 성공");
+            log.info("✅ JASYPT StringEncryptor 초기화 완료 및 테스트 성공 (개인키 기반)");
+            log.info("🔐 키 분리 완료: 키스토어 비밀번호 ≠ JASYPT 암호화 키");
         } catch (Exception e) {
             log.error("❌ JASYPT StringEncryptor 초기화 실패: {}", e.getMessage());
             throw new IllegalStateException("JASYPT 암호화 설정 실패", e);
