@@ -45,4 +45,7 @@ class KeystorePropertySource extends EnumerablePropertySource<KeyStore> {
 
     @Override
     public Object getProperty(String name) { return values.get(name); }
+
+    @Override
+    public boolean containsProperty(String name) { return values.containsKey(name); }
 }

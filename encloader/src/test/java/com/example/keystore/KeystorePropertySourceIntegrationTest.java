@@ -22,8 +22,8 @@ class KeystorePropertySourceIntegrationTest {
     
     private Path keystorePath;
     private final String keystorePassword = "integration-test-password";
-    private final String keyPassword = "key-password";
-    private final String testAlias = "JASYPT_PASSWORD";
+    private final String keyPassword = "integration-test-password"; // 키스토어 패스워드와 동일하게 설정
+    private final String testAlias = "jasypt_password"; // PKCS#12는 별칭을 소문자로 저장함
 
     @SpringBootApplication
     static class TestApplication {

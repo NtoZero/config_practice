@@ -173,13 +173,25 @@ keytool -importpass -alias JASYPT_PASSWORD \
 
 ## 6. 테스트 전략 _(주요 케이스 동일)_
 
+| 구분 | 검증 포인트 |
+|------|-------------|
+| **Unit** | `KeystorePropertySource.from()` 반환 Map 검증 |
+| **Slice** | `EnvironmentPostProcessor` 우선순위 및 PropertySource 삽입 위치 |
+| **E2E** | 실제 애플리케이션에서 Jasypt 복호화 성공 여부 |
 - `from(String,String)` 이 `classpath:` 리소스도 정상 처리하는지 **추가 단위 테스트** 권장.
 
 ---
 
 ## 7. 보안 및 한계 _(변경 없음)_
 
-(…중략…)
+1. **메모리 노출**
+    - Post‑processor 가 값을 JVM 메모리에 올리므로 `jcmd VM.system_properties` 등으로 확인 가능
+    - 민감 정보가 로그에 출력되지 않도록 주의
+2. **운영계 비밀번호 관리**
+    - 시스템 속성 대신 OS 보안 저장소(예: AWS Parameter Store, HashiCorp Vault) 등을 이용 권장
+3. **keystore 비밀번호 보호**
+    - CI/CD 파이프라인에서 비밀번호를 평문으로 노출하지 않도록  
+      (예: Secrets Manager, encrypted variables 사용)
 
 ---
 
@@ -195,4 +207,3 @@ keytool -importpass -alias JASYPT_PASSWORD \
 `ResourceLoader` 로의 전환으로 **fat JAR / native 이미지 / jar-in-war** 배포 환경에서도 안전하게 keystore 리소스를 찾을 수 있습니다.  
 설계서의 다른 내용은 유지하면서 최신 Spring 스타일에 부합하도록 개선되었습니다.  
 
-궁금한 점이 있으면 편히 말씀해주세요, **대장님**! 🚀

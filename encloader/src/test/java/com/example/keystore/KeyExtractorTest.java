@@ -18,9 +18,10 @@ class KeyExtractorTest {
     Path tempDir;
     
     private KeyStore keyStore;
-    private final String keyPassword = "key-password";
-    private final String testAlias1 = "TEST_KEY_1";
-    private final String testAlias2 = "TEST_KEY_2";
+    private final String keystorePassword = "keystore-password";
+    private final String keyPassword = "keystore-password"; // 키스토어 패스워드와 동일하게 설정
+    private final String testAlias1 = "test_key_1"; // PKCS#12는 별칭을 소문자로 저장함
+    private final String testAlias2 = "test_key_2"; // PKCS#12는 별칭을 소문자로 저장함
 
     @BeforeEach
     void setUp() throws Exception {
