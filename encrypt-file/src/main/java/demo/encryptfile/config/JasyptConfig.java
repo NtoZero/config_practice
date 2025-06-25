@@ -46,7 +46,7 @@ public class JasyptConfig {
 
     @PostConstruct
     public void validateConfiguration() {
-        log.info("🔐 JASYPT 설정 초기화 중... (개인키 기반 v2.0)");
+        log.info("🔐 JASYPT 설정 초기화 중... (SecretKey 기반 v2.0)");
         log.info("키스토어 위치: {}", keystoreLocation);
         log.info("키스토어 별칭: {}", keystoreAlias);
         log.info("암호화 알고리즘: {}", algorithm);
@@ -71,19 +71,19 @@ public class JasyptConfig {
     @Bean(name = "jasyptStringEncryptor")
     @Primary
     public StringEncryptor stringEncryptor() {
-        log.info("🔧 JASYPT StringEncryptor 빈 생성 중... (개인키 기반)");
+        log.info("🔧 JASYPT StringEncryptor 빈 생성 중... (SecretKey 기반)");
         
-        // 🔑 핵심 변경: 키스토어에서 개인키를 추출하여 JASYPT 비밀번호로 사용
-        String privateKeyPassword = keyStoreService.extractPrivateKeyAsPassword(
+        // 🔑 핵심 변경: 키스토어에서 SecretKey를 추출하여 JASYPT 비밀번호로 사용
+        String secretKeyPassword = keyStoreService.extractSecretKeyAsPassword(
             keystoreLocation, keystorePassword, keystoreAlias);
         
-        log.info("🔐 개인키 기반 암호화 키 추출 완료 (키스토어 비밀번호와 분리됨)");
+        log.info("🔐 SecretKey 기반 암호화 키 추출 완료 (키스토어 비밀번호와 분리됨)");
         
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
         
-        // 개인키 기반 암호화 설정
-        config.setPassword(privateKeyPassword);  // 🔑 키스토어 비밀번호가 아닌 개인키 사용
+        // SecretKey 기반 암호화 설정
+        config.setPassword(secretKeyPassword);  // 🔑 키스토어 비밀번호가 아닌 SecretKey 사용
         config.setAlgorithm(algorithm);
         config.setKeyObtentionIterations(iterations);
         config.setPoolSize(poolSize);
@@ -103,7 +103,7 @@ public class JasyptConfig {
                 throw new IllegalStateException("암호화/복호화 테스트 실패");
             }
             
-            log.info("✅ JASYPT StringEncryptor 초기화 완료 및 테스트 성공 (개인키 기반)");
+            log.info("✅ JASYPT StringEncryptor 초기화 완료 및 테스트 성공 (SecretKey 기반)");
             log.info("🔐 키 분리 완료: 키스토어 비밀번호 ≠ JASYPT 암호화 키");
         } catch (Exception e) {
             log.error("❌ JASYPT StringEncryptor 초기화 실패: {}", e.getMessage());

@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
+import javax.crypto.SecretKey;
+import java.security.Key;
 import java.util.Base64;
 
 /**
@@ -18,15 +18,15 @@ import java.util.Base64;
 public class KeyStoreService {
 
     /**
-     * 키스토어에서 개인키를 추출하여 JASYPT 암호화용 비밀번호로 변환
+     * 키스토어에서 SecretKey를 추출하여 JASYPT 암호화용 비밀번호로 변환
      * 
      * @param keystorePath 키스토어 파일 경로
      * @param keystorePassword 키스토어 비밀번호
      * @param alias 키 별칭
-     * @return 개인키 기반 암호화 비밀번호
+     * @return SecretKey 기반 암호화 비밀번호
      */
-    public String extractPrivateKeyAsPassword(String keystorePath, String keystorePassword, String alias) {
-        log.info("키스토어에서 개인키 추출 시작: path={}, alias={}", keystorePath, alias);
+    public String extractSecretKeyAsPassword(String keystorePath, String keystorePassword, String alias) {
+        log.info("키스토어에서 SecretKey 추출 시작: path={}, alias={}", keystorePath, alias);
         
         try {
             // 키스토어 파일 경로 정리 (file: 프로토콜 제거)
@@ -38,24 +38,30 @@ public class KeyStoreService {
                 keyStore.load(fis, keystorePassword.toCharArray());
             }
             
-            // 개인키 추출
-            PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, keystorePassword.toCharArray());
-            if (privateKey == null) {
-                throw new IllegalStateException("개인키를 찾을 수 없습니다. 별칭: " + alias);
+            // SecretKey 추출
+            Key key = keyStore.getKey(alias, keystorePassword.toCharArray());
+            if (key == null) {
+                throw new IllegalStateException("키를 찾을 수 없습니다. 별칭: " + alias);
             }
             
-            // 개인키를 Base64로 인코딩하여 비밀번호로 사용
-            byte[] privateKeyBytes = privateKey.getEncoded();
-            String privateKeyPassword = Base64.getEncoder().encodeToString(privateKeyBytes);
+            if (!(key instanceof SecretKey)) {
+                throw new IllegalStateException("키가 SecretKey 타입이 아닙니다. 실제 타입: " + key.getClass().getSimpleName());
+            }
             
-            log.info("개인키 추출 완료. 키 길이: {} bytes", privateKeyBytes.length);
+            SecretKey secretKey = (SecretKey) key;
             
-            // 보안상 이유로 개인키 내용은 로그에 출력하지 않음
-            return privateKeyPassword;
+            // SecretKey를 Base64로 인코딩하여 비밀번호로 사용
+            byte[] secretKeyBytes = secretKey.getEncoded();
+            String secretKeyPassword = Base64.getEncoder().encodeToString(secretKeyBytes);
+            
+            log.info("SecretKey 추출 완료. 키 길이: {} bytes", secretKeyBytes.length);
+            
+            // 보안상 이유로 키 내용은 로그에 출력하지 않음
+            return secretKeyPassword;
             
         } catch (Exception e) {
-            log.error("개인키 추출 실패: {}", e.getMessage());
-            throw new IllegalStateException("키스토어에서 개인키 추출 실패: " + e.getMessage(), e);
+            log.error("SecretKey 추출 실패: {}", e.getMessage());
+            throw new IllegalStateException("키스토어에서 SecretKey 추출 실패: " + e.getMessage(), e);
         }
     }
 
@@ -84,23 +90,23 @@ public class KeyStoreService {
                 throw new IllegalStateException("키스토어에서 별칭 '" + alias + "'를 찾을 수 없습니다.");
             }
             
-            // 개인키 존재 확인
-            PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, keystorePassword.toCharArray());
-            if (privateKey == null) {
-                throw new IllegalStateException("별칭 '" + alias + "'에 대한 개인키를 찾을 수 없습니다.");
+            // SecretKey 존재 확인
+            Key key = keyStore.getKey(alias, keystorePassword.toCharArray());
+            if (key == null) {
+                throw new IllegalStateException("별칭 '" + alias + "'에 대한 키를 찾을 수 없습니다.");
             }
             
-            // 인증서 존재 확인
-            Certificate certificate = keyStore.getCertificate(alias);
-            if (certificate == null) {
-                throw new IllegalStateException("별칭 '" + alias + "'에 대한 인증서를 찾을 수 없습니다.");
+            if (!(key instanceof SecretKey)) {
+                throw new IllegalStateException("키가 SecretKey 타입이 아닙니다. 실제 타입: " + key.getClass().getSimpleName());
             }
+            
+            SecretKey secretKey = (SecretKey) key;
             
             log.info("키스토어 검증 완료");
             log.info("   - 키스토어 타입: PKCS12");
             log.info("   - 별칭: {}", alias);
-            log.info("   - 개인키 알고리즘: {}", privateKey.getAlgorithm());
-            log.info("   - 인증서 타입: {}", certificate.getType());
+            log.info("   - 키 알고리즘: {}", secretKey.getAlgorithm());
+            log.info("   - 키 포맷: {}", secretKey.getFormat());
             
         } catch (Exception e) {
             log.error("키스토어 검증 실패: {}", e.getMessage());
