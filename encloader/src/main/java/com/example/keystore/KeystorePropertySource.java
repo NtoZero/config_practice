@@ -1,5 +1,6 @@
 package com.example.keystore;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.util.*;
 
+@Slf4j
 class KeystorePropertySource extends EnumerablePropertySource<KeyStore> {
 
     private final Map<String, Object> values = new HashMap<>();
@@ -39,6 +41,8 @@ class KeystorePropertySource extends EnumerablePropertySource<KeyStore> {
             return new KeystorePropertySource("keystore", ks, password.toCharArray());
         } catch (Exception e) {
             // 실패 시 부팅을 중단하는 편이 안전
+            log.error("p12 암호화 파일을 로드하는데 실패했습니다.");
+            log.error(e.getMessage(), e);
             throw new IllegalStateException("Keystore load error from location: " + location, e);
         }
     }
