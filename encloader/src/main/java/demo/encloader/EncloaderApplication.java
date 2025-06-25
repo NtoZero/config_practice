@@ -48,10 +48,7 @@ public class EncloaderApplication implements CommandLineRunner {
 		
 		// 직접 keystore에서 로드된 속성들 확인
 		System.out.println("🔑 Properties loaded from Keystore:");
-		checkKeystoreProperty("JASYPT_PASSWORD");
-		checkKeystoreProperty("DEMO_SECRET");
-		checkKeystoreProperty("DB_PASSWORD");
-		checkKeystoreProperty("API_KEY");
+		checkAllKeystoreProperties();
 		System.out.println();
 		
 		// 플레이스홀더가 해석된 최종 값들
@@ -101,6 +98,41 @@ public class EncloaderApplication implements CommandLineRunner {
 							   " (length=" + value.length() + ")");
 		} else {
 			System.out.println("   ✗ " + propertyName + ": not found");
+		}
+	}
+	
+	private void checkAllKeystoreProperties() {
+		// Environment에서 PropertySource들을 순회하여 keystore PropertySource 찾기
+		if (environment instanceof org.springframework.core.env.ConfigurableEnvironment) {
+			org.springframework.core.env.ConfigurableEnvironment configurableEnv = 
+				(org.springframework.core.env.ConfigurableEnvironment) environment;
+			
+			configurableEnv.getPropertySources().forEach(propertySource -> {
+				if ("keystore".equals(propertySource.getName())) {
+					if (propertySource instanceof org.springframework.core.env.EnumerablePropertySource) {
+						org.springframework.core.env.EnumerablePropertySource<?> enumerablePS = 
+							(org.springframework.core.env.EnumerablePropertySource<?>) propertySource;
+						
+						String[] propertyNames = enumerablePS.getPropertyNames();
+						if (propertyNames.length == 0) {
+							System.out.println("   ⚠️  No properties found in keystore");
+							return;
+						}
+						
+						for (String propertyName : propertyNames) {
+							checkKeystoreProperty(propertyName);
+						}
+						return;
+					}
+				}
+			});
+			
+			// keystore PropertySource를 찾지 못한 경우
+			System.out.println("   ⚠️  Keystore PropertySource not found - checking fallback properties");
+			checkKeystoreProperty("JASYPT_PASSWORD");
+			checkKeystoreProperty("DEMO_SECRET");
+			checkKeystoreProperty("DB_PASSWORD");
+			checkKeystoreProperty("API_KEY");
 		}
 	}
 	
