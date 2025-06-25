@@ -54,7 +54,7 @@ management:
 # 로깅 설정
 logging:
   level:
-    root: DEBUG
+    root: INFO
     com.github.ulisesbocchio.jasyptspringboot: DEBUG
     org.jasypt: DEBUG
     demo.encryptfile: DEBUG

@@ -16,7 +16,7 @@ for /f "delims=" %%A in ('
 
 REM --- 2) Save the generated keystore password to a secure file ---
 set "passFile=keystore_pass.txt"
-echo %STOREPASS% > "%passFile%"
+powershell -NoProfile -Command "Set-Content -Path '%passFile%' -Value '%STOREPASS%' -NoNewline"
 
 REM Set read-only permissions for the file owner
 icacls "%passFile%" /inheritance:r >nul
