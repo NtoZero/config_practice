@@ -8,7 +8,7 @@
 
 ---
 
-## 1. 목표 _(변경 없음)_
+## 1. 목표 
 
 - **PKCS#12(`.p12`)** 파일에서 alias 별 비밀 값을 읽어와 **Spring Boot `Environment`** 에 동적으로 주입한다.  
 - 메인 모듈의 `application.yml` / `application.properties` 에 선언된 place‑holder(예: `${JASYPT_PASSWORD}`)가 keystore 값으로 자동 해석되도록 한다.  
@@ -16,7 +16,7 @@
 
 ---
 
-## 2. 동작 흐름 _(변경 없음)_
+## 2. 동작 흐름 
 
 ```text
 ┌─────────────────────┐
@@ -36,7 +36,7 @@
 
 ---
 
-## 3. 모듈 구조 _(경로 동일, 소스 일부 변경)_ 
+## 3. 모듈 구조 
 
 ```
 keystore-property-source-spring-boot-starter
@@ -49,7 +49,7 @@ keystore-property-source-spring-boot-starter
     └── META-INF/spring.factories
 ```
 
-### 3.1 `KeystoreEnvironmentPostProcessor` _(변경 없음)_
+### 3.1 `KeystoreEnvironmentPostProcessor` 
 
 ```java
 package com.example.keystore;
@@ -135,7 +135,7 @@ class KeystorePropertySource extends EnumerablePropertySource<KeyStore> {
 }
 ```
 
-### 3.3 `META-INF/spring.factories` _(변경 없음)_
+### 3.3 `META-INF/spring.factories` 
 
 ```
 org.springframework.boot.env.EnvironmentPostProcessor=com.example.keystore.KeystoreEnvironmentPostProcessor
@@ -143,7 +143,7 @@ org.springframework.boot.env.EnvironmentPostProcessor=com.example.keystore.Keyst
 
 ---
 
-## 4. 메인 모듈 사용법 _(변경 없음)_
+## 4. 메인 모듈 사용법 
 
 ```yaml
 spring:
@@ -171,7 +171,7 @@ keytool -importpass -alias JASYPT_PASSWORD \
 
 ---
 
-## 6. 테스트 전략 _(주요 케이스 동일)_
+## 6. 테스트 전략 
 
 | 구분 | 검증 포인트 |
 |------|-------------|
@@ -182,7 +182,7 @@ keytool -importpass -alias JASYPT_PASSWORD \
 
 ---
 
-## 7. 보안 및 한계 _(변경 없음)_
+## 7. 보안 및 한계 
 
 1. **메모리 노출**
     - Post‑processor 가 값을 JVM 메모리에 올리므로 `jcmd VM.system_properties` 등으로 확인 가능
@@ -195,7 +195,7 @@ keytool -importpass -alias JASYPT_PASSWORD \
 
 ---
 
-## 8. 참고 링크 _(ResourceLoader 관련 내용 추가)_ 
+## 8. 참고 링크 
 
 - Spring Framework Core `ResourcePatternUtils` / `ResourceLoader` 가이드  
 - Spring Boot Docs: *Externalized Configuration – EnvironmentPostProcessor*
