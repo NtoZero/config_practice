@@ -7,15 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
- * JASYPT 암호화 유틸리티 테스트
+ * JASYPT 암호화 유틸리티 테스트 (SecretKey 기반)
  * 실제 값들을 암호화하여 application.yml에 사용할 수 있는 형태로 출력
  */
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
-    "spring.jasypt.encryptor.key-store.password=QmQ8Xu1WAy3wZ+Z77Y0JXi6FU0X0ERneF36jbTR4LVg=",
+    "spring.jasypt.encryptor.key-store.password=+zBa4N3VU1/f52yiHnoLUarisaLY9d1TgZYSt89XH6M=",
     "spring.jasypt.encryptor.key-store.location=file:secrets/keystore.p12"
 })
 class JasyptEncryptionTest {
@@ -28,6 +30,9 @@ class JasyptEncryptionTest {
 
     @Test
     void 데이터베이스_URL_암호화() {
+        System.out.println("🔐 JASYPT 암호화 테스트 (SecretKey 기반):");
+        System.out.println("=====================================");
+        
         // 암호화할 값들
         String[] valuesToEncrypt = {
             "jdbc:mysql://localhost:3306/demo",
@@ -35,9 +40,6 @@ class JasyptEncryptionTest {
             "ChangeMeRoot!",
         };
 
-        System.out.println("🔐 JASYPT 암호화 결과:");
-        System.out.println("=====================================");
-        
         for (String value : valuesToEncrypt) {
             String encrypted = stringEncryptor.encrypt(value);
             String encryptedWithFormat = encryptionService.encryptWithFormat(value);
@@ -52,18 +54,18 @@ class JasyptEncryptionTest {
             assert value.equals(decrypted) : "복호화 실패!";
         }
         
-        System.out.println("✅ 모든 암호화/복호화 테스트 성공!");
+        System.out.println("✅ 모든 암호화/복호화 테스트 성공! (SecretKey 기반)");
     }
 
     @Test
     void MySQL_연결정보_암호화() {
+        System.out.println("🗄️ MySQL 연결 정보 암호화 (SecretKey 기반):");
+        System.out.println("=====================================");
+        
         // MySQL 연결 정보
         String dbUrl = "jdbc:mysql://localhost:3306/demo";
         String dbUsername = "root";  // 실제 사용자명으로 변경
         String dbPassword = "ChangeMeRoot!";  // 실제 비밀번호로 변경
-        
-        System.out.println("🗄️ MySQL 연결 정보 암호화:");
-        System.out.println("=====================================");
         
         String encryptedUrl = encryptionService.encryptWithFormat(dbUrl);
         String encryptedUsername = encryptionService.encryptWithFormat(dbUsername);
@@ -83,19 +85,20 @@ class JasyptEncryptionTest {
         System.out.println("URL: " + encryptionService.decrypt(encryptedUrl));
         System.out.println("Username: " + encryptionService.decrypt(encryptedUsername));
         System.out.println("Password: " + encryptionService.decrypt(encryptedPassword));
+        System.out.println("✅ SecretKey 기반 암호화/복호화 성공!");
     }
 
     @Test
     void 커스텀_값_암호화() {
+        System.out.println("🔐 커스텀 값들 암호화 (SecretKey 기반):");
+        System.out.println("=====================================");
+        
         // 암호화하고 싶은 값들을 여기에 추가하세요
         String[] valuesToEncrypt = {
             "jdbc:mysql://localhost:3306/demo",
             "root",                    // DB 사용자명
-            ""
+            "test-password-123"        // 테스트용 비밀번호
         };
-        
-        System.out.println("🔐 커스텀 값들 암호화:");
-        System.out.println("=====================================");
         
         for (int i = 0; i < valuesToEncrypt.length; i++) {
             String value = valuesToEncrypt[i];
@@ -122,27 +125,26 @@ class JasyptEncryptionTest {
         if (valuesToEncrypt.length > 2) {
             System.out.println("    password: " + encryptionService.encryptWithFormat(valuesToEncrypt[2]));
         }
+        System.out.println("✅ SecretKey 기반 커스텀 암호화 완료!");
     }
 
     /**
-     * 복호화 전용 메서드
+     * 복호화 전용 메서드 (SecretKey 기반)
      * 이미 암호화된 값들을 복호화하여 원본 값을 확인할 때 사용
      */
     @Test
     void 암호화된_값_복호화() {
+        System.out.println("🔓 암호화된 값들 복호화 (SecretKey 기반):");
+        System.out.println("=====================================");
+        
         // 복호화하고 싶은 암호화된 값들을 여기에 추가하세요
         // ENC() 형태나 순수 암호화 문자열 모두 가능
         String[] encryptedValues = {
             "ENC(your-encrypted-value-here)",  // ENC() 형태
             "another-encrypted-value",         // 순수 암호화 문자열
             // 실제 복호화할 값들을 여기에 추가하세요
-                "ENC(DHMROhTp1w/dUH1GxuiyfAKH+jTbTwzBYOoVZi9E6ouinsGL3RK2KRHP6xRl+QyDBKd2XqhjvqVBJaWdUZ/eck7LWmg+lAePyaSi+Nm0f1M=)",
-                "ENC(HZ+9mUVFXqXqrqUBe3QjpFx7Loy40375JC/DFBkJgrAt2HXrlNrOQHmvtA2vNvGJ)",
-                "ENC(MV3eWU0ANwBeDmHbd/az+XpV9+knIiSRtZTa7D61IUWZrtgq1A9VJ2KIspOEQPWCa70EHARmFCxze7tzAojSyQ==)"
+            // 주의: 이전 PrivateKey 기반으로 암호화된 값들은 복호화되지 않습니다
         };
-        
-        System.out.println("🔓 암호화된 값들 복호화:");
-        System.out.println("=====================================");
         
         for (int i = 0; i < encryptedValues.length; i++) {
             String encryptedValue = encryptedValues[i];
@@ -161,7 +163,7 @@ class JasyptEncryptionTest {
                 
             } catch (Exception e) {
                 System.out.println("   오류: ❌ 복호화 실패 - " + e.getMessage());
-                System.out.println("   원인: 잘못된 암호화 값이거나 키가 다를 수 있습니다.");
+                System.out.println("   원인: SecretKey 기반으로 변경되어 이전 PrivateKey 기반 암호화 값은 복호화되지 않습니다.");
             }
             
             System.out.println("-------------------------------------");
@@ -171,6 +173,31 @@ class JasyptEncryptionTest {
         System.out.println("💡 사용법:");
         System.out.println("1. 복호화할 암호화된 값을 encryptedValues 배열에 추가하세요");
         System.out.println("2. ENC(암호화값) 형태나 순수 암호화 문자열 모두 가능합니다");
-        System.out.println("3. 테스트를 실행하면 복호화된 원본 값을 확인할 수 있습니다");
+        System.out.println("3. SecretKey 기반으로 변경되어 이전 PrivateKey 기반 암호화 값은 호환되지 않습니다");
+        System.out.println("4. 새로운 값들은 SecretKey 기반으로 다시 암호화해야 합니다");
+    }
+
+    /**
+     * 키스토어 정보 확인 테스트
+     */
+    @Test
+    void 키스토어_정보_확인() {
+        System.out.println("🔑 키스토어 정보 확인 (SecretKey 기반):");
+        System.out.println("=====================================");
+        
+        try {
+            // 간단한 암호화/복호화 테스트
+            String testValue = "SecretKey-기반-테스트-" + System.currentTimeMillis();
+            String encrypted = stringEncryptor.encrypt(testValue);
+            String decrypted = stringEncryptor.decrypt(encrypted);
+            
+            System.out.println("테스트 값: " + testValue);
+            System.out.println("암호화 결과: " + encrypted);
+            System.out.println("복호화 결과: " + decrypted);
+            System.out.println("검증: " + (testValue.equals(decrypted) ? "✅ 성공" : "❌ 실패"));
+            
+        } catch (Exception e) {
+            System.out.println("❌ 테스트 실패: " + e.getMessage());
+        }
     }
 }

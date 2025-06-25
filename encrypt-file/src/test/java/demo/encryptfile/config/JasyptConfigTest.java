@@ -8,13 +8,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import org.springframework.test.context.TestPropertySource;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * JASYPT 설정 테스트 (개인키 기반 v2.0)
+ * JASYPT 설정 테스트 (SecretKey 기반 v2.0)
  */
 @SpringBootTest
 @ActiveProfiles("test")
+@TestPropertySource(properties = {
+    "spring.jasypt.encryptor.key-store.password=+zBa4N3VU1/f52yiHnoLUarisaLY9d1TgZYSt89XH6M=",
+    "spring.jasypt.encryptor.key-store.location=file:secrets/keystore.p12"
+})
 class JasyptConfigTest {
 
     @Autowired
@@ -36,19 +42,19 @@ class JasyptConfigTest {
     private String keystoreAlias;
 
     @Test
-    void 키스토어에서_개인키_추출_테스트() {
-        // When - 개인키 추출
-        String privateKeyPassword = keyStoreService.extractPrivateKeyAsPassword(
+    void 키스토어에서_SecretKey_추출_테스트() {
+        // When - SecretKey 추출
+        String secretKeyPassword = keyStoreService.extractSecretKeyAsPassword(
             keystoreLocation, keystorePassword, keystoreAlias);
 
         // Then
-        assertThat(privateKeyPassword).isNotNull();
-        assertThat(privateKeyPassword).isNotEmpty();
-        assertThat(privateKeyPassword).isNotEqualTo(keystorePassword); // 🔑 키 분리 확인
+        assertThat(secretKeyPassword).isNotNull();
+        assertThat(secretKeyPassword).isNotEmpty();
+        assertThat(secretKeyPassword).isNotEqualTo(keystorePassword); // 🔑 키 분리 확인
         
         System.out.println("🔐 키 분리 확인:");
         System.out.println("키스토어 비밀번호: " + keystorePassword);
-        System.out.println("개인키 기반 비밀번호: " + privateKeyPassword.substring(0, 20) + "...");
+        System.out.println("SecretKey 기반 비밀번호: " + secretKeyPassword.substring(0, 20) + "...");
         System.out.println("✅ 키스토어 비밀번호 ≠ JASYPT 암호화 키");
     }
 
@@ -77,7 +83,7 @@ class JasyptConfigTest {
         System.out.println("원본: " + plainText);
         System.out.println("암호화: " + encrypted);
         System.out.println("복호화: " + decrypted);
-        System.out.println("✅ 개인키 기반 암호화 성공");
+        System.out.println("✅ SecretKey 기반 암호화 성공");
     }
 
     @Test
@@ -150,19 +156,20 @@ class JasyptConfigTest {
         // Given
         String testData = "Migration Test Data";
         
-        // When - 개인키 기반으로 암호화
-        String privateKeyPassword = keyStoreService.extractPrivateKeyAsPassword(
+        // When - SecretKey 기반으로 암호화
+        String secretKeyPassword = keyStoreService.extractSecretKeyAsPassword(
             keystoreLocation, keystorePassword, keystoreAlias);
         String encrypted = stringEncryptor.encrypt(testData);
         String decrypted = stringEncryptor.decrypt(encrypted);
         
         // Then
         assertThat(decrypted).isEqualTo(testData);
-        assertThat(privateKeyPassword).isNotEqualTo(keystorePassword);
+        assertThat(secretKeyPassword).isNotEqualTo(keystorePassword);
         
         System.out.println("🎯 마이그레이션 검증 결과:");
-        System.out.println("✅ 키 분리: " + !privateKeyPassword.equals(keystorePassword));
+        System.out.println("✅ 키 분리: " + !secretKeyPassword.equals(keystorePassword));
         System.out.println("✅ 암호화/복호화: " + testData.equals(decrypted));
-        System.out.println("✅ 개인키 기반 JASYPT 동작 확인");
+        System.out.println("✅ SecretKey 기반 JASYPT 동작 확인");
     }
+
 }
