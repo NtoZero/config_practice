@@ -15,7 +15,7 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
-    "spring.jasypt.encryptor.key-store.password=MySecurePassword123!",
+    "spring.jasypt.encryptor.key-store.password=gw3MfHMEDu5KSrk7av92rIwsmQbFCR872OaHAdzBdVw=",
     "spring.jasypt.encryptor.key-store.location=file:secrets/keystore.p12"
 })
 class JasyptEncryptionTest {

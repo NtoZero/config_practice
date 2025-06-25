@@ -18,7 +18,7 @@ spring:
       key-store:
         location: ${KEYSTORE_LOCATION:file:secrets/keystore.p12}
         password: ${JASYPT_STOREPASS}
-        alias: jasypt-key
+        alias: jasypt-secret-key
   
   # JPA 설정 (공통)
   jpa:
@@ -34,9 +34,9 @@ spring:
 # 암호화된 설정 값들 (예제)
 demo:
   database:
-    url: ENC(NLx3PM+RlkvuoQhJIKXLlVENuAUu0tVZPzSjPjCV9aZI3MNg1dQ9wbl5FjUq/cigii4G7YU1C0K01LyvLLrRU/Bu5T25kikW1nAi8XWVDFw=)
-    username: ENC(VGNbfZ9Tf3fp1pUn/AylPv/plOH1D52Qon/HNZNWI2pfX1tEg8O5XUNW+x7GfCti)
-    password: ENC(EhtoE6BWksBtv83MLkPiueb72O65Rs1WK83lJ4UPYMmxCX6pylVT3otXJcU3f1xE)
+    url: ENC(oPgMpzmsx6ZoCsdJvf5uUuqyAoFatextiDYRZjmHFF9FGTdzuHY7hXQGeS6hIJRClEfJfqd45RhBEYXZK2TteRLcD7gWJo8pAE6OIpCKTZY=)
+    username: ENC(/f+4vIgAaxDpjqpLY2/yhhCZHIZ6xHZeCd+2yb138a4EcZC8MN6OW1SWPM6S2ic9)
+    password: ENC(Erg8AnnoW14aNvMAnS6PevTNmGON+PT6Fpf7//013MqRGcPnYB3Zmdyn9ywEboy9)
   api:
     key: ENC(encrypted-api-key-here)
     secret: ENC(encrypted-secret-here)
