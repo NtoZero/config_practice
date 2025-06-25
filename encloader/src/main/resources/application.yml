@@ -16,7 +16,7 @@ spring:
 
 # Keystore 설정
 keystore:
-  path: ${KEYSTORE_PATH:file:secrets/keystore.p12}
+  path: ${KEYSTORE_LOCATION:file:encloader/scripts/secrets/keystore.p12}
   password: ${KEYSTORE_PASSWORD:}
 
 # 로깅 설정
