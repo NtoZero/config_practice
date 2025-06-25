@@ -5,6 +5,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.util.*;
 
@@ -19,7 +20,8 @@ class KeystorePropertySource extends EnumerablePropertySource<KeyStore> {
             String alias = aliases.nextElement();
             if (!ks.isKeyEntry(alias)) continue;
             byte[] secret = ks.getKey(alias, pwd).getEncoded();
-            values.put(alias, Base64.getEncoder().encodeToString(secret));
+            // 대칭성 확보: 원본 UTF-8 바이트 배열을 문자열로 복원
+            values.put(alias, new String(secret, StandardCharsets.UTF_8));
         }
     }
 
