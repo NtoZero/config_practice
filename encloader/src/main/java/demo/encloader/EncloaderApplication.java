@@ -65,7 +65,7 @@ public class EncloaderApplication implements CommandLineRunner {
 	private void checkKeystoreProperty(String propertyName) {
 		String value = environment.getProperty(propertyName);
 		if (value != null) {
-			log.info("   ✓ " + propertyName + ": " + maskValue(value) + 
+			log.info("   ✓ " + propertyName + ": " + maskValue(value) +
 							   " (length=" + value.length() + ")");
 		} else {
 			log.info("   ✗ " + propertyName + ": not found");
@@ -145,6 +145,6 @@ public class EncloaderApplication implements CommandLineRunner {
 		if (value.length() <= 8) {
 			return "***";
 		}
-		return value.substring(0, 4) + "***" + value.substring(value.length() - 4);
+		return value.substring(0, 1) + "***" + value.substring(value.length() - 1);
 	}
 }
