@@ -19,6 +19,8 @@ repositories {
 }
 
 dependencies {
+    // module dependency
+    implementation project(':encloader')
 
     // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter'
@@ -33,8 +35,7 @@ dependencies {
     // Database
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // Lombok
-    compileOnly 'org.projectlombok:lombok'
+    // Lombok (annotationProcessor는 각 모듈에서 직접 선언)
     annotationProcessor 'org.projectlombok:lombok'
 
     // Testing
