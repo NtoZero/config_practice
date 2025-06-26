@@ -12,6 +12,9 @@ import org.springframework.core.env.Environment;
 public class EncloaderApplication implements CommandLineRunner {
 
 	private final Environment environment;
+
+	@Value("${p12loader.enable:false}")
+	private boolean encloadEnabled;
 	
 	@Value("${demo.encrypted-value:not-configured}")
 	private String encryptedValue;
@@ -35,13 +38,18 @@ public class EncloaderApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		if (!encloadEnabled) {
+			log.info("EncloaderApplication is disabled via p12encload.enable=false. Skipping demo logs.");
+			return; // 즉시 종료
+		}
+
 		log.info("=".repeat(80));
-		log.info("🔐 Keystore Property Source Demo - Refactored Version 1.2");
+		log.info("🔐 Keystore Property Source - Version 1.0");
 		log.info("=".repeat(80));
 		
 		// Keystore 설정 정보 출력
-		String keystorePath = environment.getProperty("keystore.path");
-		String keystorePassword = environment.getProperty("keystore.password");
+		String keystorePath = environment.getProperty("p12loader.keystore.path");
+		String keystorePassword = environment.getProperty("p12loader.keystore.password");
 		
 		log.info("📁 Keystore Configuration:");
 		log.info("   Path: " + keystorePath);
@@ -50,20 +58,6 @@ public class EncloaderApplication implements CommandLineRunner {
 		// 직접 keystore에서 로드된 속성들 확인
 		log.info("🔑 Properties loaded from Keystore:");
 		checkAllKeystoreProperties();
-
-		// 플레이스홀더가 해석된 최종 값들
-		log.info("🎯 Resolved Property Values:");
-		log.info("   Jasypt Password: " + maskValue(jasyptPassword));
-		log.info("   Demo Encrypted Value: " + maskValue(encryptedValue));
-		log.info("   Database Password: " + maskValue(databasePassword));
-		log.info("   API Key: " + maskValue(apiKey));
-
-		// 문자열 복원 검증
-		log.info("🔍 Data Integrity Verification:");
-		verifyStringIntegrity("JASYPT_PASSWORD", jasyptPassword);
-		verifyStringIntegrity("DEMO_SECRET", encryptedValue);
-		verifyStringIntegrity("DB_PASSWORD", databasePassword);
-		verifyStringIntegrity("API_KEY", apiKey);
 
 		// 성공/실패 상태 출력
 		boolean keystoreLoaded = !jasyptPassword.equals("not-configured") && 
@@ -127,10 +121,6 @@ public class EncloaderApplication implements CommandLineRunner {
 			
 			// keystore PropertySource를 찾지 못한 경우
 			log.info("   ⚠️  Keystore PropertySource not found - checking fallback properties");
-			checkKeystoreProperty("JASYPT_PASSWORD");
-			checkKeystoreProperty("DEMO_SECRET");
-			checkKeystoreProperty("DB_PASSWORD");
-			checkKeystoreProperty("API_KEY");
 		}
 	}
 	

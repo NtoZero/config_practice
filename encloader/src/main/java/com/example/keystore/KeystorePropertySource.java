@@ -23,8 +23,7 @@ class KeystorePropertySource extends EnumerablePropertySource<KeyStore> {
             if (!ks.isKeyEntry(alias)) continue;
             byte[] secret = ks.getKey(alias, pwd).getEncoded();
             // 대칭성 확보: 원본 UTF-8 바이트 배열을 문자열로 복원
-            // 대소문자 일관성을 위해 대문자로 키를 저장
-            values.put(alias.toUpperCase(), new String(secret, StandardCharsets.UTF_8));
+            values.put(alias, new String(secret, StandardCharsets.UTF_8));
         }
     }
 
@@ -53,12 +52,12 @@ class KeystorePropertySource extends EnumerablePropertySource<KeyStore> {
     @Override
     public Object getProperty(String name) { 
         if (name == null) return null;
-        return values.get(name.toUpperCase()); 
+        return values.get(name);
     }
 
     @Override
     public boolean containsProperty(String name) { 
         if (name == null) return false;
-        return values.containsKey(name.toUpperCase()); 
+        return values.containsKey(name);
     }
 }

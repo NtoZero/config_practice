@@ -15,14 +15,15 @@ spring:
       string-output-type: base64
 
 # Keystore 설정
-keystore:
-  path: ${KEYSTORE_LOCATION:file:encloader/scripts/secrets/keystore.p12}
-  password: ${KEYSTORE_PASSWORD:}
+p12loader:
+  enable: ${P12LOADER_ENABLE:false}
+  keystore:
+    path: ${KEYSTORE_LOCATION:file:encloader/scripts/secrets/keystore.p12}
+    password: ${KEYSTORE_PASSWORD:}
 
 # 로깅 설정
 logging:
   level:
-    com.example.keystore: DEBUG
     root: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
