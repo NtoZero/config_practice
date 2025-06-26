@@ -58,27 +58,6 @@ public class EncloaderApplication implements CommandLineRunner {
 		// 직접 keystore에서 로드된 속성들 확인
 		log.info("🔑 Properties loaded from Keystore:");
 		checkAllKeystoreProperties();
-
-		// 성공/실패 상태 출력
-		boolean keystoreLoaded = !jasyptPassword.equals("not-configured") && 
-								!jasyptPassword.equals("default-password");
-		
-		if (keystoreLoaded) {
-			log.info("✅ SUCCESS: Keystore properties successfully loaded!");
-			log.info("✅ SUCCESS: Original UTF-8 strings properly restored!");
-			log.info("✅ SUCCESS: Jasypt will receive actual password strings!");
-		} else {
-			log.info("❌ FAILURE: Keystore properties not loaded. Check keystore configuration.");
-			log.info("💡 Usage:");
-			log.info("   # First, create demo keystore:");
-			log.info("   java -cp encloader.jar com.example.keystore.KeystoreCreator \\");
-			log.info("        secrets/keystore.p12 mypassword demo");
-			log.info("");
-			log.info("   # Then run with keystore:");
-			log.info("   java -Dkeystore.path=file:secrets/keystore.p12 \\");
-			log.info("        -Dkeystore.password=mypassword \\");
-			log.info("        -jar encloader.jar");
-		}
 		
 		log.info("=".repeat(80));
 	}
