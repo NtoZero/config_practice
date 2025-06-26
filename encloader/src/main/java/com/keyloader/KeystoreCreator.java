@@ -1,4 +1,4 @@
-package com.example.keystore;
+package com.keyloader;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.FileOutputStream;

@@ -138,7 +138,7 @@ class KeystorePropertySource extends EnumerablePropertySource<KeyStore> {
 ### 3.3 `META-INF/spring.factories` 
 
 ```
-org.springframework.boot.env.EnvironmentPostProcessor=com.example.keystore.KeystoreEnvironmentPostProcessor
+org.springframework.boot.env.EnvironmentPostProcessor=com.keyloader.KeystoreEnvironmentPostProcessor
 ```
 
 ---

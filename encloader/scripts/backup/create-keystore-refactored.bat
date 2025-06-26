@@ -57,7 +57,7 @@ if not exist "%JAR_FILE%" (
 
 REM Create keystore using KeystoreCreator
 echo 🔑 Creating keystore using KeystoreCreator...
-java -cp "%JAR_FILE%" com.example.keystore.KeystoreCreator "%KEYSTORE_FILE%" "%KEYSTORE_PASSWORD%" demo
+java -cp "%JAR_FILE%" com.keyloader.KeystoreCreator "%KEYSTORE_FILE%" "%KEYSTORE_PASSWORD%" demo
 
 if errorlevel 1 (
     echo ❌ Failed to create keystore using KeystoreCreator!

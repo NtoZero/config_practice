@@ -143,7 +143,7 @@ class KeystorePropertySource extends EnumerablePropertySource<KeyStore> {
 ### 4.3 META-INF/spring.factories
 
 ```
-org.springframework.boot.env.EnvironmentPostProcessor=com.example.keystore.KeystoreEnvironmentPostProcessor
+org.springframework.boot.env.EnvironmentPostProcessor=com.keyloader.KeystoreEnvironmentPostProcessor
 ```
 
 ## 5. 해결 전략: 쓰기/읽기 로직의 대칭성 확보
@@ -181,7 +181,7 @@ keytool을 사용하는 모든 배치(.bat) 및 쉘(.sh) 스크립트는 이 프
 javac com/example/keystore/KeystoreCreator.java
 
 # 2. 데모 키스토어 생성
-java com.example.keystore.KeystoreCreator secrets/keystore.p12 [원하는_키스토어_비밀번호] demo
+java com.keyloader.KeystoreCreator secrets/keystore.p12 [원하는_키스토어_비밀번호] demo
 ```
 
 ### Phase 3: 애플리케이션 실행

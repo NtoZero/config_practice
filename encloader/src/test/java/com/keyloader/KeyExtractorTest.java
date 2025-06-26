@@ -1,4 +1,4 @@
-package com.example.keystore;
+package com.keyloader;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

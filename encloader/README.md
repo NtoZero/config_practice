@@ -43,7 +43,7 @@ values.put(alias, new String(secret, StandardCharsets.UTF_8));
 
 # 데모 키스토어 생성 - 새로운 방식!
 java -cp build/libs/encloader-0.0.1-SNAPSHOT.jar \
-     com.example.keystore.KeystoreCreator \
+     com.keyloader.KeystoreCreator \
      secrets/keystore.p12 mypassword demo
 ```
 
@@ -149,7 +149,7 @@ KeystoreCreator.createKeystore(
 ```bash
 # 1. 키스토어 생성
 java -cp build/libs/encloader-0.0.1-SNAPSHOT.jar \
-     com.example.keystore.KeystoreCreator \
+     com.keyloader.KeystoreCreator \
      secrets/keystore.p12 testpass demo
 
 # 2. 데모 애플리케이션 실행

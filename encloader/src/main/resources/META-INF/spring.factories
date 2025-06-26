@@ -1,1 +1,1 @@
-org.springframework.boot.env.EnvironmentPostProcessor=com.example.keystore.KeystoreEnvironmentPostProcessor
+org.springframework.boot.env.EnvironmentPostProcessor=com.keyloader.KeystoreEnvironmentPostProcessor
